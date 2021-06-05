@@ -36,7 +36,21 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::table('product_type')->insert(['product_name' => $request->name]);
+
+            $notification = [
+                'message'   =>  'Data successfully inserted',
+                'alert-type'    =>  'success'
+            ];
+            return redirect()->back()->with($notification);
+        } catch (\Throwable $th) {
+            $notification = [
+                'message'   =>  $e->getMessage(),
+                'alert-type'    =>  'danger'
+            ];
+            return redirect()->back()->with($notification);
+        }
     }
 
     /**

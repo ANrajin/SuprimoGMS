@@ -10,7 +10,7 @@
             <div class="card">
                 <div class="card-header">Add New Product</div>
                 <div class="card-body">
-                    <form action="" method="post">
+                    <form action="{{route('products.store')}}" method="post">
                         @csrf
                         <div class="form-group">
                             <label for="">Product Name</label>

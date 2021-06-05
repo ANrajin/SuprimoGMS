@@ -39,56 +39,60 @@ class SampleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SampleRequest $request)
+    public function store(Request $request)
     {
         //check if directory exist or not
         if (!Storage::exists("public/Sample")) {
             Storage::makeDirectory("public/Sample");
         }
 
-        $file = $request->file('image');
-        $allowedfileExtension = ['jpeg', 'jpg', 'png'];
-        $extension = $file->getClientOriginalExtension();
-        $check = in_array($extension, $allowedfileExtension);
+        $image = null;
 
-        if ($check) {
-            $image = rand(99, 1000) . '.' . $file->getClientOriginalExtension();
+        if($request->hasFile('image')){
+            $file = $request->file('image');
+            $allowedfileExtension = ['jpeg', 'jpg', 'png'];
+            $extension = $file->getClientOriginalExtension();
+            $check = in_array($extension, $allowedfileExtension);
 
-            $data = [
-                'merchandiser' => $request->merchandiser,
-                'buyer_id' => $request->buyer_id,
-                'season' => $request->season,
-                'style_no' => $request->style_no,
-                'sample_name' => $request->name,
-                'sample_type' => $request->sample_type,
-                'product_type_id' => $request->type_id,
-                'image' => $image,
-                'descriptions' => $request->desc,
-                'specifications' => $request->spec,
-            ];
-
-            try {
-                Sample::create($data);
-
-                //store image into storage directory
-                Storage::putFileAs('public/Sample', $file, $image);
-
+            if ($check) {
+                $image = rand(99, 1000) . '.' . $file->getClientOriginalExtension();
+            } else {
                 $notification = [
-                    'message'   =>  'Data successfully inserted',
-                    'alert-type'    =>  'success'
-                ];
-                return redirect()->back()->with($notification);
-            } catch (\Throwable $e) {
-                $notification = [
-                    'message'   =>  $e->getMessage(),
-                    'alert-type'    =>  'danger'
+                    'message'   =>  'Supported file types are JPEG, JPG or PNG',
+                    'alert-type'    =>  'warning'
                 ];
                 return redirect()->back()->with($notification);
             }
-        } else {
+        }
+
+        $data = [
+            'merchandiser' => $request->merchandiser,
+            'buyer_id' => $request->buyer_id,
+            'season' => $request->season,
+            'style_no' => $request->style_no,
+            'sample_name' => $request->name,
+            'sample_type' => $request->sample_type,
+            'product_type_id' => $request->type_id,
+            'image' => $image,
+            'descriptions' => $request->desc,
+            'specifications' => $request->spec,
+        ];
+
+        try {
+            Sample::create($data);
+
+            //store image into storage directory
+            Storage::putFileAs('public/Sample', $file, $image);
+
             $notification = [
-                'message'   =>  'Supported file types are JPEG, JPG or PNG',
-                'alert-type'    =>  'warning'
+                'message'   =>  'Data successfully inserted',
+                'alert-type'    =>  'success'
+            ];
+            return redirect()->back()->with($notification);
+        } catch (\Throwable $e) {
+            $notification = [
+                'message'   =>  $e->getMessage(),
+                'alert-type'    =>  'danger'
             ];
             return redirect()->back()->with($notification);
         }
