@@ -73,6 +73,8 @@ class SampleController extends Controller
             'sample_name' => $request->name,
             'sample_type' => $request->sample_type,
             'product_type_id' => $request->type_id,
+            'unit_price' => $request->price,
+            'unit_cost' => $request->cost,
             'image' => $image,
             'descriptions' => $request->desc,
             'specifications' => $request->spec,

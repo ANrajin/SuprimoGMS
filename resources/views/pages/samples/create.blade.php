@@ -67,6 +67,14 @@
                                         <option value="Shipment sample">Shipment sample</option>
                                     </select>
                                 </div>
+                                <div class="form-group">
+                                    <label for="">Unit Cost</label>
+                                    <input type="text" class="form-control" name="cost">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Unit Price</label>
+                                    <input type="text" class="form-control" name="price">
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
